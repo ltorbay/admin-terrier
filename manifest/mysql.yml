@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  namespace: terrier
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  namespace: terrier
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-terrier
+  namespace: terrier
+spec:
+  selector:
+    app: mysql-terrier
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-terrier
+  namespace: terrier
+spec:
+  selector:
+    matchLabels:
+      app: mysql-terrier
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-terrier
+    spec:
+      containers:
+        - image: mysql:5.6
+          name: mysql-terrier
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-root-password
+                  optional: false
+            - name: MYSQL_DATABASE
+              value: terrier
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-username
+                  optional: false
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-password
+                  optional: false
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
