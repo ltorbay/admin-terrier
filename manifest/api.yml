@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: api-terrier
-          image: ghcr.io/ltorbay/api-terrier-crm:0.0.2-SNAPSHOT
+          image: ghcr.io/ltorbay/api-terrier-crm:0.0.2
           env:
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-terrier.terrier.svc.cluster.local:3306/terrier
