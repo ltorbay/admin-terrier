@@ -12,35 +12,47 @@ data:
       worker_connections  10240;
     }
     http {
-      log_format  main
-              'remote_addr:$remote_addr\t'
-              'time_local:$time_local\t'
-              'method:$request_method\t'
-              'uri:$request_uri\t'
-              'host:$host\t'
-              'status:$status\t'
-              'bytes_sent:$body_bytes_sent\t'
-              'referer:$http_referer\t'
-              'useragent:$http_user_agent\t'
-              'forwardedfor:$http_x_forwarded_for\t'
-              'request_time:$request_time';
-      access_log	/var/log/nginx/access.log main;
-      server {
-          listen       80;
-          server_name  terrier-rp;
-          location /api {
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header Host $host;
-              proxy_redirect   off;
-              proxy_pass       http://api-terrier.terrier.svc.cluster.local:8080;
-              rewrite /api/(.*) /$1  break;
-          }
-          location / {
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header Host $host;
-              proxy_pass       http://crm-terrier.terrier.svc.cluster.local:80;
-          }
-      }
+        log_format  main
+                'remote_addr:$remote_addr\t'
+                'time_local:$time_local\t'
+                'method:$request_method\t'
+                'uri:$request_uri\t'
+                'host:$host\t'
+                'status:$status\t'
+                'bytes_sent:$body_bytes_sent\t'
+                'referer:$http_referer\t'
+                'useragent:$http_user_agent\t'
+                'forwardedfor:$http_x_forwarded_for\t'
+                'request_time:$request_time';
+        access_log	/var/log/nginx/access.log main;
+  
+        server {
+          listen 80 default_server;
+          listen [::]:80 default_server;
+          server_name _;
+          return 301 https://$host$request_uri;
+        }
+  
+        server {
+            listen 443 ssl default_server;
+            listen [::]:443 ssl default_server;
+            ssl_certificate /etc/nginx/ssl/tls.crt;
+            ssl_certificate_key /etc/nginx/ssl/tls.key;
+  
+            server_name  terrier-rp;
+            location /api {
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Host $host;
+                proxy_redirect   off;
+                proxy_pass       http://api-terrier.terrier.svc.cluster.local:8080;
+                rewrite /api/(.*) /$1  break;
+            }
+            location / {
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Host $host;
+                proxy_pass       http://crm-terrier.terrier.svc.cluster.local:80;
+            }
+        }
     }
 
 ---
@@ -54,7 +66,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 88
+    - port: 80
       targetPort: 80
   selector:
     app: rp-terrier
@@ -83,6 +95,8 @@ spec:
             - mountPath: /etc/nginx
               readOnly: true
               name: nginx-conf
+            - mountPath: /etc/nginx/ssl
+                name: secret-volume
             - mountPath: /var/log/nginx
               name: log
           ports:
@@ -94,5 +108,8 @@ spec:
             items:
               - key: nginx.conf
                 path: nginx.conf
+        - name: secret-volume
+          secret:
+            secretName: tls-cert-secret
         - name: log
           emptyDir: {}
