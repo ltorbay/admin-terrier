@@ -103,7 +103,9 @@ spec:
               name: log
           ports:
             - containerPort: 80
+              name: http-port
             - containerPort: 443
+              name: https-port
       volumes:
         - name: nginx-conf
           configMap:
