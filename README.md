@@ -29,6 +29,10 @@ kubectl create secret generic db-secret --dry-run=client -o yaml \
 --from-literal=db-password=111 \
 --from-literal=db-readonly-username=readonly-user \
 --from-literal=db-readonly-password=222 \
+>mysecret.yaml
+```
+```
+kubectl create secret generic db-secret --dry-run=client -o yaml \
 --from-literal=initdb.sql='CREATE USER 'generic-user'@'%' IDENTIFIED BY '111'; GRANT CREATE, ALTER, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'generic-user'@'%' WITH GRANT OPTION; CREATE USER 'readonly-user'@'%' IDENTIFIED BY '222'; GRANT SELECT on *.* TO 'readonly-user'@'%' WITH GRANT OPTION;' \
 >mysecret.yaml
 ```
