@@ -88,8 +88,7 @@ spec:
             claimName: mysql-pv-claim
         - name: mysql-initdb
           secret:
-            secretName: initdb
+            secretName: db-secret
+            optional: true
             items: 
-            - name: db-secret
-              key: initdb.sql
-              optional: true
+            - key: initdb.sql
