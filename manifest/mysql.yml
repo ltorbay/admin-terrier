@@ -92,3 +92,4 @@ spec:
             optional: true
             items: 
             - key: initdb.sql
+              path: .
