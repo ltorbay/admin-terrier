@@ -23,11 +23,13 @@ Install kubeseal client
 
 #### Generate normal Kubernetes secret
 ```
-head /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c 24 | xargs -I {} \
 kubectl create secret generic db-secret --dry-run=client -o yaml \
---from-literal=db-password={} \
---from-literal=db-username=db-user \
---from-literal=db-root-password=root-password \
+--from-literal=db-root-password=password \
+--from-literal=db-username=generic-user \
+--from-literal=db-password=111 \
+--from-literal=db-readonly-username=readonly-user \
+--from-literal=db-readonly-password=222 \
+--from-literal=initdb.sql='CREATE USER 'generic-user'@'%' IDENTIFIED BY '111'; GRANT CREATE, ALTER, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'generic-user'@'%' WITH GRANT OPTION; CREATE USER 'readonly-user'@'%' IDENTIFIED BY '222'; GRANT SELECT on *.* TO 'readonly-user'@'%' WITH GRANT OPTION;' \
 >mysecret.yaml
 ```
 Edit generated file if needed
