@@ -56,18 +56,6 @@ data:
     }
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: rp-terrier
-  namespace: terrier
-  labels:
-    app: rp-terrier
-spec:
-  type: LoadBalancer
-  selector:
-    app: rp-terrier
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
