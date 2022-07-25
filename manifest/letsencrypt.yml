@@ -19,6 +19,11 @@ metadata:
   name: ssl
   namespace: terrier
 spec:
+  defaultBackend:
+    service:
+      name: rp-terrier
+      port:
+        number: 80
   rules:
     - host: gites-leterrier.fr
       http:
