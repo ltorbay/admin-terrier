@@ -3,6 +3,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 ssl/
+local/
 
 ### STS ###
 .apt_generated

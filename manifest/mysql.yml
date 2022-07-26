@@ -19,8 +19,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
   namespace: terrier
-spec:
-  storageClassName: manual
+spec:x
+  storageClassName: local-path
   accessModes:
     - ReadWriteOnce
   resources:

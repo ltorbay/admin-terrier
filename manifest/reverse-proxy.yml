@@ -39,14 +39,6 @@ data:
                 rewrite /api/(.*) /$1  break;
             }
     
-            location /superset {
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header Host $host;
-                proxy_redirect   off;
-                proxy_pass       http://superset:8088;
-                rewrite /api/(.*) /$1  break;
-            }
-    
             location / {
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header Host $host;
@@ -65,6 +57,8 @@ metadata:
     app: rp-terrier
 spec:
   type: ClusterIP
+  ports: 
+    - port: 80
   selector:
     app: rp-terrier
 ---

@@ -40,4 +40,6 @@ Edit generated file if needed
 
 #### Seal secret 
 See [sealed-secrets doc on github](https://github.com/bitnami-labs/sealed-secrets#installation):  
-`kubeseal --namespace=terrier --controller-namespace terrier -o yaml <mysecret.yaml >mysealedsecret.yaml`
+`kubeseal --namespace=terrier -o yaml <db-initdb.secret.yml >db-initdb.sealedsecret.yaml`
+`kubeseal --namespace=terrier -o yaml <db-secret.secret.yml >db-secret.sealedsecret.yaml`
+`kubeseal --namespace=terrier -o yaml <users-secret.secret.yml >users-secret.sealedsecret.yaml`
