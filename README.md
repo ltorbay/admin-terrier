@@ -12,6 +12,10 @@ See [Helm installation guide](https://helm.sh/docs/intro/install/)
 `tar -zxvf helm-v3.9.0-linux-amd64.tar.gz`  
 `helm repo add bitnami https://charts.bitnami.com/bitnami`
 
+### Certificates
+Install cert manager  
+`helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manager \
+--set "extraArgs={--feature-gates=ExperimentalGatewayAPISupport=true}"`
 ### Generate sealed secrets
 #### Installation
 Install sealed-secrets on the k3s cluster  

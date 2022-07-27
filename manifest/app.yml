@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: crm-terrier
-          image: ghcr.io/ltorbay/terrier-crm:0.0.8
+          image: ghcr.io/ltorbay/terrier-crm:0.0.9
           ports:
             - containerPort: 80
           volumeMounts:

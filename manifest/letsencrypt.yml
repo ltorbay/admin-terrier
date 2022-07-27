@@ -7,8 +7,12 @@ spec:
   acme:
     email: "louistorbay@gmail.com"
     privateKeySecretRef:
-      name: letsencrypt-prod
+      name: letsencrypt-private-key
     server: "https://acme-v02.api.letsencrypt.org/directory"
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -39,4 +43,4 @@ spec:
   tls:
     - hosts:
         - gites-leterrier.fr
-      secretName: letsencrypt-prod
+      secretName: terrier-tls-secret
