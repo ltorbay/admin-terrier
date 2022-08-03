@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: crm-pv-volume
+  namespace: terrier
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/imgcache"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: crm-pv-claim
+  namespace: terrier
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-terrier
+  namespace: terrier
+spec:
+  selector:
+    app: crm-terrier
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-terrier
+  namespace: terrier
+  labels:
+    app: crm-terrier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crm-terrier
+  template:
+    metadata:
+      labels:
+        app: crm-terrier
+    spec:
+      containers:
+        - name: crm-terrier
+          image: ghcr.io/ltorbay/terrier-crm:0.1.1
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /var/log/nginx
+              name: log
+            - mountPath: /var/www/imgcache
+              name: crm-persistent-storage
+      volumes:
+        - name: log
+          emptyDir: { }
+        - name: crm-persistent-storage
+          persistentVolumeClaim:
+            claimName: crm-pv-claim

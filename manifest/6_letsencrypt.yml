@@ -30,7 +30,7 @@ spec:
       port:
         number: 80
   rules:
-    - host: gites-leterrier.fr
+    - host: leterrier-gites.fr
       http:
         paths:
           - backend:
@@ -42,5 +42,5 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - gites-leterrier.fr
+        - leterrier-gites.fr
       secretName: terrier-tls-secret
