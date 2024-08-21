@@ -8,8 +8,8 @@ Check that the server is running
 ## Installation and configuration notes
 ### Helm
 See [Helm installation guide](https://helm.sh/docs/intro/install/)  
-`wget https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz`  
-`tar -zxvf helm-v3.9.0-linux-amd64.tar.gz`  
+`wget https://get.helm.sh/helm-v3.15.3-linux-amd64.tar.gz`  
+`tar -zxvf helm-v3.15.3-linux-amd64.tar.gz`  
 `helm repo add bitnami https://charts.bitnami.com/bitnami`
 
 ### Certificates

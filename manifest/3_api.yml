@@ -27,8 +27,10 @@ spec:
     spec:
       containers:
         - name: api-terrier
-          image: ghcr.io/ltorbay/api-terrier-crm:0.1.0
+          image: ghcr.io/ltorbay/api-terrier-crm:1.1.3
           env:
+            - name: NOTIFICATION_EMAIL
+              value: leterrier.gites@gmail.com
             - name: PAYMENTS_SQUARE_ACCESS_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -44,7 +46,7 @@ spec:
             - name: PAYMENTS_SQUARE_ENVIRONMENT
               value: PRODUCTION
             - name: PAYMENTS_CLEANING_FEE_CENTS
-              value: '15000'
+              value: '20000'
             - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
